@@ -22,7 +22,7 @@ const options = {
 
     if (selectedDate <= date) {
       startBtn.disabled = true;
-      Notiflix.Notify.success('Please choose a date in the future');
+      Notiflix.Notify.failure('Please choose a date in the future');
       return;
     } else {
       startBtn.disabled = false;
@@ -44,13 +44,18 @@ class Timer {
     this.intervalId = setInterval(() => {
       const currentTime = Date.now();
       const deltaTime = selectedDate - currentTime;
+
+      if (deltaTime <= 0) {
+        this.stop();
+        return;
+      }
       const { days, hours, minutes, seconds } = convertMs(deltaTime);
       updateClockFace({ days, hours, minutes, seconds });
     }, 1000);
   }
 
   stop() {
-    clearINterval(this.intervalId);
+    clearInterval(this.intervalId);
     this.intervalId = null;
   }
 }
